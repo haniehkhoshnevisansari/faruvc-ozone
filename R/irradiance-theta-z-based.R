@@ -154,6 +154,10 @@ theta_summary <- data.frame(
   E_avg_at_z_2_45m = numeric()
 )
 
+cat("\n=== Summary Statistics by Theta ===\n")
+cat("Theta(°)\tMin E_avg\tMax E_avg\tMean E_avg\tE_avg@1m\tE_avg@2m\tE_avg@2.45m\n")
+cat("---------------------------------------------------------------------------------\n")
+
 for (theta in theta_values) {
   theta_data <- results_matrix[results_matrix$theta_degrees == theta, ]
   
