@@ -184,7 +184,7 @@ for (theta in theta_values) {
               mean(theta_data$E_avg), E_avg_1m, E_avg_2m, E_avg_2_45m))
 }
 
-par(mfrow = c(2, 2), mar = c(4, 4, 3, 2))
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 2))
 
 # E_avg vs Z for different theta values (show selected theta values)
 selected_thetas <- c(15, 25, 35, 45, 55, 65, 75)
@@ -207,64 +207,23 @@ grid(TRUE)
 theta_55_data <- results_matrix[results_matrix$theta_degrees == 55, ]
 lines(theta_55_data$z, theta_55_data$E_avg, col = "red", lwd = 3)
 
-# E_avg vs Theta for different Z values
-selected_z <- c(0.5, 1.0, 1.5, 2.0, 2.45)
-colors_z <- rainbow(length(selected_z))
-
-plot(0, 0, type = "n", xlim = c(10, 80), ylim = c(0, max(results_matrix$E_avg)),
-     xlab = "Theta (degrees)", ylab = "E_avg (W/m²)",
-     main = "E_avg vs Theta for Different Z Values")
-
-for (i in seq_along(selected_z)) {
-  z_val <- selected_z[i]
-  z_data <- results_matrix[abs(results_matrix$z - z_val) < 0.02, ]  # Small tolerance for matching
-  if (nrow(z_data) > 0) {
-    lines(z_data$theta_degrees, z_data$E_avg, col = colors_z[i], lwd = 2)
-  }
-}
-
-legend("topright", legend = paste0("z=", selected_z, "m"), 
-       col = colors_z, lwd = 2, cex = 0.8, title = "Height")
-grid(TRUE)
-
-# 3D surface plot representation (contour plot)
-# Create matrix for contour plot
-z_unique <- sort(unique(results_matrix$z))
-theta_unique <- sort(unique(results_matrix$theta_degrees))
-E_avg_matrix <- matrix(NA, nrow = length(z_unique), ncol = length(theta_unique))
-
-for (i in seq_along(z_unique)) {
-  for (j in seq_along(theta_unique)) {
-    idx <- which(abs(results_matrix$z - z_unique[i]) < 0.001 & 
-                 results_matrix$theta_degrees == theta_unique[j])
-    if (length(idx) > 0) {
-      E_avg_matrix[i, j] <- results_matrix$E_avg[idx[1]]
-    }
-  }
-}
-
-contour(z_unique, theta_unique, E_avg_matrix, 
-        xlab = "Z height (m)", ylab = "Theta (degrees)",
-        main = "E_avg Contour Plot (Z vs Theta)")
-grid(TRUE)
-
-# Max E_avg vs Theta
-plot(theta_summary$theta_degrees, theta_summary$max_E_avg, 
+# E_avg at z=2.45m vs Theta
+plot(theta_summary$theta_degrees, theta_summary$E_avg_at_z_2_45m, 
      type = "b", lwd = 2, pch = 16, col = "blue",
-     xlab = "Theta (degrees)", ylab = "Max E_avg (W/m²)",
-     main = "Maximum E_avg vs Theta")
+     xlab = "Theta (degrees)", ylab = "E_avg at z=2.45m (W/m²)",
+     main = "E_avg at z=2.45m vs Theta")
 grid(TRUE)
 
-max_theta_idx <- which.max(theta_summary$max_E_avg)
-points(theta_summary$theta_degrees[max_theta_idx], 
-       theta_summary$max_E_avg[max_theta_idx], 
+max_theta_245_idx <- which.max(theta_summary$E_avg_at_z_2_45m)
+points(theta_summary$theta_degrees[max_theta_245_idx], 
+       theta_summary$E_avg_at_z_2_45m[max_theta_245_idx], 
        col = "red", pch = 19, cex = 1.5)
-text(theta_summary$theta_degrees[max_theta_idx], 
-     theta_summary$max_E_avg[max_theta_idx],
-     sprintf("Max\n(%.0f°)", theta_summary$theta_degrees[max_theta_idx]),
+text(theta_summary$theta_degrees[max_theta_245_idx], 
+     theta_summary$E_avg_at_z_2_45m[max_theta_245_idx],
+     sprintf("Max\n(%.0f°)", theta_summary$theta_degrees[max_theta_245_idx]),
      pos = 3, col = "red")
 
-cat("\n=== FINAL SUMMARY ===\n")
+
 cat(sprintf("Total data points calculated: %d\n", nrow(results_matrix)))
 cat(sprintf("Z range: %.3f to %.3f m\n", min(results_matrix$z), max(results_matrix$z)))
 cat(sprintf("Theta range: %.0f° to %.0f°\n", 
@@ -287,9 +246,5 @@ if (length(original_idx) > 0) {
 
 write.csv(results_matrix, "eavg_theta_z_matrix.csv", row.names = FALSE)
 write.csv(theta_summary, "eavg_theta_summary.csv", row.names = FALSE)
-
-cat("\nResults saved to:\n")
-cat("  - eavg_theta_z_matrix.csv (full matrix)\n")
-cat("  - eavg_theta_summary.csv (summary by theta)\n")
 
 par(mfrow = c(1, 1))
