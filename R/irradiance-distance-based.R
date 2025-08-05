@@ -1,4 +1,4 @@
-# UV Lamp E_avg Calculation
+# Far-UVC Lamp E_avg Calculation
 # Based on equations from the supplemental material of Link et al. (2023)
 
 library(pracma) 
