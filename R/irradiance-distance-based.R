@@ -162,7 +162,6 @@ h <- 6.626e-34  # Planck constant (J⋅s)
 c <- 3e8        # Speed of light (m/s)
 lambda <- 222e-9 # Wavelength (m)
 photon_energy <- h * c / lambda  # Energy per photon (J)
-
 photon_flux <- chamber_result$E_avg / photon_energy  # photons/(m²⋅s)
 photon_flux_cm2 <- photon_flux / 1e4  # Convert to photons/(cm²⋅s)
 
