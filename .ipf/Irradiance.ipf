@@ -1,9 +1,8 @@
 #pragma TextEncoding = "UTF-8"
 #pragma rtGlobals=3		// Use modern global access method and strict wave access.
 
-// UV Lamp E_avg Calculation - Finding z_min from Paper Equation S5
-// Based on equations from the supplemental information document
-// Converted from R to Igor Pro
+// Far-UVC Lamp E_avg Calculation 
+// based on the method described by Link et al. (2023)
 
 // Global constants
 constant E0 = 0.286		// W/m^(2-a) from equation S3
